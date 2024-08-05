@@ -1,5 +1,6 @@
 import requests
 import datetime
+import isodate
 
 import weather
 
@@ -94,6 +95,7 @@ class WeatherGov(weather.Weather):
                 for v in data["properties"][key]["values"]:
                     # always has 'validTime' and 'value'
                     # data for value is usually float, but for key="weather" it is an object
+                    # https://en.wikipedia.org/wiki/ISO_8601#Durations
                     _validTime, _duration=v["validTime"].split("/")
                     value=v["value"]
 
@@ -106,11 +108,8 @@ class WeatherGov(weather.Weather):
                     validTime=datetime.datetime.strptime(_validTime, "%Y-%m-%dT%H:%M:%S%z")
 
                     # convert duration (hours)
-                    d_uom=_duration[-1]
-                    duration_h=int(_duration[2:-1])
-                    if d_uom == "D":
-                        # convert "day" to "hour" duration
-                        duration_h=duration_h*24
+                    dur=isodate.parse_duration(_duration)
+                    duration_h=int(dur.days * 24 + dur.seconds / 3600)
 
                     for i in range(0, duration_h):
                         o_key=self.output_date(validTime, i)
