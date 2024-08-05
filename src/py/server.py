@@ -21,15 +21,25 @@ sources = {}
 
 @app.route("/")
 def help():
-    return f"instructions {request.args.get('test')}"
+    return f"see http://github.com/jewzaam/weather-service for help"
 
 @app.route("/forecast/<latitude>/<longitude>")
 def forecast(latitude, longitude):
     source = request.args.get('source')
-    if source not in sources:
-        return "Invalid source", 400
-    forecast = sources[source].get_forecast(latitude, longitude, request.args)
-    return Response(json.dumps(forecast), mimetype='text/json')
+    code=200
+    try:
+        if source not in sources:
+            code=400
+            return "Invalid source", code
+        forecast = sources[source].get_forecast(latitude, longitude, request.args)
+        return Response(json.dumps(forecast), mimetype='text/json'), code
+    except ValueError as ve:
+        code=400
+        return ve.args[0], code
+    finally:
+        # note including "source" could explode metrics if some bad actor tries a lot of random strings
+        # therefore source is not included on this metric
+        utility.inc("weatherService_forecast_response", {"code": code})
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Service to get weather data from various sources.")

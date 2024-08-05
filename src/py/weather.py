@@ -8,12 +8,12 @@ import utility
 
 """
 Metrics:
-    weather_get_forecast_success_total{source}
-    weather_get_forecast_invalid_total{source}
-    weather_get_forecast_error_total{source}
-    weather_get_forecast_implementation_success_total{source}
-    weather_get_forecast_implementation_invalid_total{source}
-    weather_get_forecast_implementation_error_total{source}
+    weatherService_get_forecast_success_total{source}
+    weatherService_get_forecast_invalid_total{source}
+    weatherService_get_forecast_error_total{source}
+    weatherService_get_forecast_implementation_success_total{source}
+    weatherService_get_forecast_implementation_invalid_total{source}
+    weatherService_get_forecast_implementation_error_total{source}
 """
 
 class Weather:
@@ -59,13 +59,13 @@ class Weather:
             coordinates=self.__normalize_coordinates(float(latitude), float(longitude))
             forecast = self.__get_forecast_cached(coordinates[0], coordinates[1], parameters)
             is_valid, _ = self.validate_output(forecast)
-            utility.inc("weather_get_forecast_success_total", {"source": self.get_source()})
+            utility.inc("weatherService_get_forecast_success_total", {"source": self.get_source()})
             if not is_valid:
-                utility.inc("weather_get_forecast_invalid_total", {"source": self.get_source()})
+                utility.inc("weatherService_get_forecast_invalid_total", {"source": self.get_source()})
             return forecast
         except Exception as e:
             # fail for any reason, make sure we have error metric and re-raise the error
-            utility.inc("weather_get_forecast_error_total", {"source": self.get_source()})
+            utility.inc("weatherService_get_forecast_error_total", {"source": self.get_source()})
             raise e
 
     @lru_cache(expires_after=30) # 30 seconds
@@ -73,13 +73,13 @@ class Weather:
         try:
             forecast = self.get_forecast_implementation(latitude, longitude, parameters)
             is_valid, _ = self.validate_output(forecast)
-            utility.inc("weather_get_forecast_implementation_success_total", {"source": self.get_source()})
+            utility.inc("weatherService_get_forecast_implementation_success_total", {"source": self.get_source()})
             if not is_valid:
-                utility.inc("weather_get_forecast_implementation_invalid_total", {"source": self.get_source()})
+                utility.inc("weatherService_get_forecast_implementation_invalid_total", {"source": self.get_source()})
             return forecast
         except Exception as e:
             # fail for any reason, make sure we have error metric and re-raise the error
-            utility.inc("weather_get_forecast_implementation_error_total", {"source": self.get_source()})
+            utility.inc("weatherService_get_forecast_implementation_error_total", {"source": self.get_source()})
             raise e
 
     def get_forecast_implementation(self, latitude, longitude, parameters={}):
