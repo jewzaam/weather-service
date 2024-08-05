@@ -113,8 +113,14 @@ class WeatherGov(weather.Weather):
 
                     for i in range(0, duration_h):
                         o_key=self.output_date(validTime, i)
+
                         if o_key not in output["data"]:
-                            output["data"][o_key] = {}
+                            # always set "dt"!
+                            dt=datetime.datetime.fromisoformat(o_key.replace("Z", "+00:00")).timestamp()
+                            output["data"][o_key] = {
+                                "dt": dt,
+                            }
+
                         if key != "weather":
                             output["data"][o_key][key]={
                                 "value": value,

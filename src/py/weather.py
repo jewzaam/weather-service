@@ -105,6 +105,7 @@ class Weather:
             # key is the date, check each hour's data
             for key in output["data"][date]:
                 if key not in [
+                    "dt",
                     "temperature",
                     "apparentTemperature",
                     "dewpoint",
@@ -123,13 +124,23 @@ class Weather:
                     errors.append(f"unexpected key: data.DATE.{key}")
                     continue
                 
-                for key2 in output["data"][date][key]:
-                    if key2 not in [
-                        "value",
-                        "uom",
-                    ]:
-                        is_valid = False
-                        errors.append(f"unexpected key: data.DATE.{key}.{key2}")
-                        break
-        
+                if isinstance(output["data"][date][key], dict):
+                    for key2 in output["data"][date][key]:
+                        if key2 not in [
+                            "value",
+                            "uom",
+                        ]:
+                            is_valid = False
+                            errors.append(f"unexpected key: data.DATE.{key}.{key2}")
+                            break
+
+            # check for required fields
+            for key in [
+                "dt",
+            ]:
+                if key not in output["data"][date]:
+                    is_valid = False
+                    errors.append(f"missing required key: data.DATE.{key}")
+                    continue
+                
         return is_valid, errors

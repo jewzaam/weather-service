@@ -66,7 +66,9 @@ class OpenWeatherMap(weather.Weather):
 
                 # and that date as the key in object must be consistent
                 o_key=self.output_date(validTime, 0)
-                output["data"][o_key] = {}
+                output["data"][o_key] = {
+                    "dt": data["dt"],
+                }
 
                 if "temp" in data and data["temp"] is not None:
                     output["data"][o_key]["temperature"] = {
