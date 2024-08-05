@@ -4,8 +4,7 @@ import datetime
 
 from expiring_lru_cache import lru_cache
 
-with httpimport.github_repo('jewzaam', 'metrics-utility', 'utility', 'main'):
-    import utility
+import utility
 
 """
 Metrics:

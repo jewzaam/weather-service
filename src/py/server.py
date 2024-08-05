@@ -11,8 +11,7 @@ from flask import request
 from flask import Response
 from prometheus_flask_exporter import PrometheusMetrics
 
-with httpimport.github_repo('jewzaam', 'metrics-utility', 'utility', 'main'):
-    import utility
+import utility
 
 app = Flask(__name__)
 
@@ -40,7 +39,7 @@ if __name__ == '__main__':
 
     # load config file
     with open(args.config, 'r') as f:
-        config = yaml.load(f)
+        config = yaml.safe_load(f)
 
     # setup sources
     for source in config["sources"]:

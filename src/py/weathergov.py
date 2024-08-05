@@ -1,7 +1,6 @@
 import requests
 import datetime
 
-import utility
 import weather
 
 API_BASE="https://api.weather.gov"

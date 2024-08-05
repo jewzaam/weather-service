@@ -3,3 +3,5 @@ argparse
 httpimport
 Flask
 prometheus-flask-exporter
+pyyaml
+requests
