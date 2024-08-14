@@ -62,7 +62,7 @@ class OpenWeatherMap(weather.Weather):
                 #   weather
 
                 # the key for output is the date
-                validTime=datetime.datetime.fromtimestamp(data["dt"])
+                validTime=datetime.datetime.fromtimestamp(data["dt"], datetime.timezone.utc)
 
                 # and that date as the key in object must be consistent
                 o_key=self.output_date(validTime, 0)
