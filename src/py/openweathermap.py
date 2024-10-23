@@ -16,7 +16,7 @@ class OpenWeatherMap(weather.Weather):
         # already have validated in parent class that required params are included, blindly use them
         apikey = parameters["apikey"]
 
-        request_url_onecall = f"https://api.openweathermap.org/data/2.5/onecall?appid={apikey}&lat={latitude}&lon={longitude}&exclude=minutely,daily,current&units=metric"
+        request_url_onecall = f"https://api.openweathermap.org/data/3.0/onecall?appid={apikey}&lat={latitude}&lon={longitude}&exclude=minutely,daily,current&units=metric"
 
         output = {
             "metadata": {
